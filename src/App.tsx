@@ -1,32 +1,21 @@
-import {
-  Container,
-  Header,
-  Image,
-  Menu,
-} from 'semantic-ui-react'
+import type { Component } from 'solid-js';
+import { HopeThemeConfig, HopeProvider } from '@hope-ui/solid'
+import { Layout } from './components/Layout';
+import { Router } from '@solidjs/router';
 
-const App = () => (
-  <div>
-    <Menu fixed='top' inverted>
-      <Container>
-        <Menu.Item as='a' header>
-          <Image size='mini' src='/logo.png' style={{ marginRight: '1.5em' }} />
-          Project Management
-        </Menu.Item>
-        <Menu.Item as='a'>Home</Menu.Item>
-        <Menu.Item as='a'>Companies</Menu.Item>
-        <Menu.Item as='a'>Projects</Menu.Item>
-      </Container>
-    </Menu>
+const config: HopeThemeConfig = {
+  lightTheme: {
+  }
+}
 
-    <Container text style={{ marginTop: '7em' }}>
-      <Header as='h1'>Semantic UI React Fixed Template</Header>
-      <p>This is a basic fixed menu template using fixed size containers.</p>
-      <p>
-        A text container is used for the main container, which is useful for single column layouts.
-      </p>
-    </Container>
-  </div>
-)
+const App: Component = () => {
+  return (
+    <Router>
+      <HopeProvider config={config}>
+        <Layout />
+      </HopeProvider>
+    </Router>
+  );
+};
 
-export default App
+export default App;
