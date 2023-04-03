@@ -1,7 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@afroze9/solid-auth0': ^0.1.1
   '@auth0/auth0-spa-js': ^2.0.4
+  '@felte/solid': ^1.2.7
+  '@felte/validator-yup': ^1.0.11
   '@hope-ui/solid': ^0.6.7
   '@solidjs/router': ^0.8.2
   '@stitches/core': ^1.2.8
@@ -12,9 +15,13 @@ specifiers:
   typescript: ^4.9.5
   vite: ^4.1.1
   vite-plugin-solid: ^2.5.0
+  yup: ^1.0.2
 
 dependencies:
+  '@afroze9/solid-auth0': 0.1.1
   '@auth0/auth0-spa-js': 2.0.4
+  '@felte/solid': 1.2.7_solid-js@1.7.1
+  '@felte/validator-yup': 1.0.11_yup@1.0.2
   '@hope-ui/solid': 0.6.7_5nwqwi3sqfih3hi5ktyjk6sgfe
   '@solidjs/router': 0.8.2_solid-js@1.7.1
   '@stitches/core': 1.2.8
@@ -22,6 +29,7 @@ dependencies:
   solid-js: 1.7.1
   solid-transition-group: 0.2.2_solid-js@1.7.1
   tslib: 2.5.0
+  yup: 1.0.2
 
 devDependencies:
   typescript: 4.9.5
@@ -29,6 +37,13 @@ devDependencies:
   vite-plugin-solid: 2.5.0_solid-js@1.7.1+vite@4.1.1
 
 packages:
+
+  /@afroze9/solid-auth0/0.1.1:
+    resolution: {integrity: sha512-aOtGWygNmm+sJlM5Lzid22B/uWwFUhkJC/6FOW9RTNp4ivQxyZ/Eir/hEWKH0K79zN++t20A8dVyJwJRzub2VQ==}
+    dependencies:
+      '@auth0/auth0-spa-js': 2.0.4
+      solid-js: 1.7.1
+    dev: false
 
   /@ampproject/remapping/2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -547,6 +562,38 @@ packages:
     dev: true
     optional: true
 
+  /@felte/common/1.1.4:
+    resolution: {integrity: sha512-4jNB4EwRpaGZppwV/YqbGF7SVRwehWw+hyTGmw2N+pL86LuqVTTSrgVOGXwPaLTju1BxAptcoAXjxZbBf0XB4Q==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: false
+
+  /@felte/core/1.3.7:
+    resolution: {integrity: sha512-/AkIEZu/Yg/K+YEdnup5c3Bb0xyr9ONdZnS0us6V/b9DgfiEqbcm1xgglD/mtwh+IH7KOhIuQecjBdPQfpNViQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      '@felte/common': 1.1.4
+    dev: false
+
+  /@felte/solid/1.2.7_solid-js@1.7.1:
+    resolution: {integrity: sha512-kVCmIBxJiemAcklJ61yxW7WCo+r4sGDSfuUws3t9pFQyKHENT+7HEfUU3hpEqx+BA5xd4bczS8MrOhf9L429rw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    peerDependencies:
+      solid-js: ^1.2.0
+    dependencies:
+      '@felte/core': 1.3.7
+      solid-js: 1.7.1
+    dev: false
+
+  /@felte/validator-yup/1.0.11_yup@1.0.2:
+    resolution: {integrity: sha512-T3VQQtNGGSnnL2+IIeW+eQHqDmSphDzJA0Ho8ivhEWisWyaLlBn2RHx1Iiv9f6um10MFanbh+bxRNdQLr5TXdg==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    peerDependencies:
+      yup: ^0.32.9
+    dependencies:
+      '@felte/common': 1.1.4
+      yup: 1.0.2
+    dev: false
+
   /@floating-ui/core/0.6.2:
     resolution: {integrity: sha512-jktYRmZwmau63adUG3GKOAVCofBXkk55S/zQ94XOorAHhwqFIOFAy1rSp2N0Wp6/tGbe9V3u/ExlGZypyY17rg==}
     dev: false
@@ -912,6 +959,10 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
+  /property-expr/2.0.5:
+    resolution: {integrity: sha512-IJUkICM5dP5znhCckHSv30Q4b5/JA5enCtkRHYaOVOAocnH/1BQEYTC5NMfT3AVl/iXKdr3aqQbQn9DxyWknwA==}
+    dev: false
+
   /resolve/1.22.1:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
     hasBin: true
@@ -990,13 +1041,26 @@ packages:
     resolution: {integrity: sha512-QD9qKY3StfbZqWOPLp0++pOrAVb/HbUi5xCc8cUo4XjP19808oaMiDzn0leBY5mCespIBM0CIZePzZjgzR83kA==}
     dev: false
 
+  /tiny-case/1.0.3:
+    resolution: {integrity: sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q==}
+    dev: false
+
   /to-fast-properties/2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
     dev: true
 
+  /toposort/2.0.2:
+    resolution: {integrity: sha512-0a5EOkAUp8D4moMi2W8ZF8jcga7BgZd91O/yabJCFY8az+XSzeGyTKs0Aoo897iV1Nj6guFq8orWDS96z91oGg==}
+    dev: false
+
   /tslib/2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
+    dev: false
+
+  /type-fest/2.19.0:
+    resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
+    engines: {node: '>=12.20'}
     dev: false
 
   /typescript/4.9.5:
@@ -1081,3 +1145,12 @@ packages:
   /yallist/3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
     dev: true
+
+  /yup/1.0.2:
+    resolution: {integrity: sha512-Lpi8nITFKjWtCoK3yQP8MUk78LJmHWqbFd0OOMXTar+yjejlQ4OIIoZgnTW1bnEUKDw6dZBcy3/IdXnt2KDUow==}
+    dependencies:
+      property-expr: 2.0.5
+      tiny-case: 1.0.3
+      toposort: 2.0.2
+      type-fest: 2.19.0
+    dev: false

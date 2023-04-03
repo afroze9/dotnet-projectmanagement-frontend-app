@@ -1,8 +1,8 @@
 import { Component, For } from 'solid-js';
-import { Center, Flex, VStack } from '@hope-ui/solid';
-import { ApplicationLinks, CONSTANTS } from '../constants';
-import { Hyperlink } from '../constants';
+import { Flex, VStack } from '@hope-ui/solid';
+import { ApplicationLinks } from '../constants';
 import { SideNavLink } from './SideNavLink';
+import { Hyperlink } from '../@types';
 
 export interface SideNavLinkProps {
   link: Hyperlink;

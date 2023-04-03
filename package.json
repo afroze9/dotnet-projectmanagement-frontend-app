@@ -15,13 +15,17 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@afroze9/solid-auth0": "^0.1.1",
     "@auth0/auth0-spa-js": "^2.0.4",
+    "@felte/solid": "^1.2.7",
+    "@felte/validator-yup": "^1.0.11",
     "@hope-ui/solid": "^0.6.7",
     "@solidjs/router": "^0.8.2",
     "@stitches/core": "^1.2.8",
     "@tanstack/solid-table": "^8.8.5",
     "solid-js": "^1.7.1",
     "solid-transition-group": "^0.2.2",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.0",
+    "yup": "^1.0.2"
   }
 }

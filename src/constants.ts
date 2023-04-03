@@ -1,7 +1,4 @@
-export type Hyperlink = {
-  name: string;
-  path: string;
-}
+import { Hyperlink } from "./@types"
 
 export const CONSTANTS = {
   APP_NAME: 'Project Management'

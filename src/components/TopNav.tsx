@@ -1,10 +1,9 @@
 import type { Component } from 'solid-js';
-import { Flex, Box, Button, Heading, Spacer, Anchor, Text, Center } from '@hope-ui/solid';
+import { Flex, Box, Button, Heading, Spacer, Anchor, Center } from '@hope-ui/solid';
 import { CONSTANTS } from '../constants';
 import { Link } from '@solidjs/router';
-import { useAuth0 } from '../auth/Auth0';
-import { Auth0State } from '../auth/@types';
 import { User } from '@auth0/auth0-spa-js';
+import { Auth0State, useAuth0 } from '@afroze9/solid-auth0';
 
 export const TopNav: Component = () => {
   const auth0: Auth0State<User> | undefined = useAuth0();

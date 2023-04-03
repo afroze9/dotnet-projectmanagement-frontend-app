@@ -1,8 +1,9 @@
-import { Container, Heading, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
+import { Button, Container, Flex, Heading, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
 import { Component, For, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
 import { CompanyResponse } from "../@types";
-import { withAuthenticationRequired } from "../auth/withAuthenticationRequired";
+import { withAuthenticationRequired } from "@afroze9/solid-auth0";
+import { Link } from "@solidjs/router";
 
 const defaultData: CompanyResponse[] = [
   {
@@ -108,9 +109,13 @@ const Companies: Component = () => {
 
   return (
     <Container p="$2">
-      <Heading size="xl">
-        Companies
-      </Heading>
+      <Flex>
+        <Heading size="xl">
+          Companies
+        </Heading>
+        <Spacer />
+        <Button as={Link} href='/companies/create' >Add Company</Button>
+      </Flex>
       <Container mt="$4">
         <Table striped="odd" highlightOnHover>
           <Thead>
