@@ -1,13 +1,7 @@
 import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody } from "@hope-ui/solid";
 import { ColumnDef, createSolidTable, getCoreRowModel, flexRender } from "@tanstack/solid-table";
 import { Component, For, createSignal } from "solid-js";
-
-type ProjectResponse = {
-  id: number;
-  name: string;
-  company: string;
-  tasks: number;
-}
+import { ProjectResponse } from "../@types";
 
 const defaultData: ProjectResponse[] = [
   {
@@ -90,7 +84,7 @@ const defaultColumns: ColumnDef<ProjectResponse>[] = [
   }
 ]
 
-const tasks: Component = () => {
+const Projects: Component = () => {
   const [data, setData] = createSignal(defaultData);
 
   const table = createSolidTable<ProjectResponse>({
@@ -152,4 +146,4 @@ const tasks: Component = () => {
   );
 };
 
-export default tasks;
+export default Projects;

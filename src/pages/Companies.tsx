@@ -1,12 +1,7 @@
 import { Container, Heading, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
 import { Component, For, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
-
-type CompanyResponse = {
-  id: number;
-  name: string;
-  projects: number;
-}
+import { CompanyResponse } from "../@types";
 
 const defaultData: CompanyResponse[] = [
   {

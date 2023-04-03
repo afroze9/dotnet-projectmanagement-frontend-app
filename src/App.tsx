@@ -2,6 +2,7 @@ import type { Component } from 'solid-js';
 import { HopeThemeConfig, HopeProvider } from '@hope-ui/solid'
 import { Layout } from './components/Layout';
 import { Router } from '@solidjs/router';
+import { Auth0 } from './auth/Auth0';
 
 const config: HopeThemeConfig = {
   lightTheme: {
@@ -10,11 +11,20 @@ const config: HopeThemeConfig = {
 
 const App: Component = () => {
   return (
-    <Router>
-      <HopeProvider config={config}>
-        <Layout />
-      </HopeProvider>
-    </Router>
+    <Auth0
+      domain='afrozeprojectmanagement.us.auth0.com'
+      clientId='mIUsoezCpUuf9zcm7py5syzgtVvNQTvD'
+      audience='company'
+      logoutRedirectUri={`${window.location.origin}/`}
+      loginRedirectUri={`${window.location.origin}/`}
+      scope='openid profile email read:project write:project update:project delete:project read:company write:company update:company delete:company'
+    >
+      <Router>
+        <HopeProvider config={config}>
+          <Layout />
+        </HopeProvider>
+      </Router>
+    </Auth0>
   );
 };
 
