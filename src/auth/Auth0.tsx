@@ -3,7 +3,9 @@ import { createContext, createResource, createSignal, mergeProps, useContext } f
 import { Auth0Props, Auth0State } from "./@types";
 
 export const Auth0Context = createContext<Auth0State>();
-export const useAuth0 = () => useContext(Auth0Context);
+export const useAuth0 = <TUser extends User = User>(
+  context = Auth0Context
+): Auth0State<User> => useContext(context) as Auth0State<User>;
 
 const isRedirect = (url: string) => {
   const [, query] = url.split('?');
@@ -51,7 +53,6 @@ export const Auth0 = (props: Auth0Props) => {
     }
 
     if (setIsAuthenticated(await client.isAuthenticated())) {
-      console.log(await client.getUser())
       setUser(await client.getUser());
     }
 
@@ -62,11 +63,10 @@ export const Auth0 = (props: Auth0Props) => {
     <Auth0Context.Provider
       value={{
         auth0Client: auth0Client,
-        isInitialized: () => isAuthenticated() !== undefined,
+        isLoading: () => isAuthenticated() === undefined,
         isAuthenticated: () => !!isAuthenticated(),
         user: user,
         loginWithRedirect: async (options?: RedirectLoginOptions) => {
-          console.log('internal login')
           const client = await auth0ClientPromise;
           client.loginWithRedirect({
             authorizationParams: {

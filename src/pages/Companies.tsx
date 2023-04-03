@@ -2,6 +2,7 @@ import { Container, Heading, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hop
 import { Component, For, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
 import { CompanyResponse } from "../@types";
+import { withAuthenticationRequired } from "../auth/withAuthenticationRequired";
 
 const defaultData: CompanyResponse[] = [
   {
@@ -156,4 +157,6 @@ const Companies: Component = () => {
   );
 };
 
-export default Companies;
+export default withAuthenticationRequired(Companies, {
+  onRedirecting: () => <>Loading</>
+});
