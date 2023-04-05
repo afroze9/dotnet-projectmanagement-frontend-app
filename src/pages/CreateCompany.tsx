@@ -1,10 +1,10 @@
 import { createForm } from "@felte/solid";
-import { Container, Flex, Heading, Spacer, Button, Table, Thead, Tr, Th, Tbody, FormControl, FormHelperText, FormLabel, Input, VStack, FormErrorMessage, HStack } from "@hope-ui/solid";
+import { Container, Flex, Heading, Button, FormControl, FormLabel, Input, VStack, FormErrorMessage, HStack } from "@hope-ui/solid";
 import { Link, useNavigate } from "@solidjs/router";
-import { flexRender } from "@tanstack/solid-table";
-import { Component, createEffect, For } from "solid-js";
-import { boolean, InferType, mixed, object, string } from "yup";
+import { Component } from "solid-js";
+import { InferType, object, string } from "yup";
 import { validator } from '@felte/validator-yup';
+import { withAuthenticationRequired } from "@afroze9/solid-auth0";
 
 const schema = object({
   name: string().min(5).required(),
@@ -73,4 +73,6 @@ const CreateCompany: Component = () => {
   );
 }
 
-export default CreateCompany;
+export default withAuthenticationRequired(CreateCompany, {
+  onRedirecting: () => <>Loading</>
+});

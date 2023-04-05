@@ -1,9 +1,10 @@
-import { Button, Container, Flex, Heading, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
+import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
 import { Component, For, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
 import { CompanyResponse } from "../@types";
 import { withAuthenticationRequired } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
+import { IconEdit, IconDelete } from "../components/Icons";
 
 const defaultData: CompanyResponse[] = [
   {
@@ -83,21 +84,51 @@ const defaultData: CompanyResponse[] = [
   }
 ]
 
-const defaultColumns: ColumnDef<CompanyResponse>[] = [
-  {
-    accessorKey: 'name',
-    cell: info => <Td>{info.getValue<string>()}</Td>,
-    footer: info => info.column.id,
-  },
-  {
-    accessorKey: 'projects',
-    cell: info => <Td>{info.getValue<number>()}</Td>,
-    footer: info => info.column.id,
-  }
-]
-
 const Companies: Component = () => {
   const [data, setData] = createSignal(defaultData);
+
+  const defaultColumns: ColumnDef<CompanyResponse>[] = [
+    {
+      accessorKey: 'name',
+      cell: info => <Td>{info.getValue<string>()}</Td>,
+      footer: info => info.column.id,
+    },
+    {
+      accessorKey: 'projects',
+      cell: info => <Td>{info.getValue<number>()}</Td>,
+      footer: info => info.column.id,
+    },
+    {
+      id: 'actions',
+      cell: info => renderActions(info.row.original.id),
+      footer: info => info.column.id
+    }
+  ]
+
+  const onEditClicked = (id: number) => {
+    console.log(id);
+  }
+
+  const onDeleteClicked = (id: number) => {
+    console.log(id);
+  }
+
+  const renderActions = (id: number) => {
+    return (
+      <Flex>
+        <IconButton aria-label="edit" icon={<IconEdit />} onClick={() => onEditClicked(id)}>Edit</IconButton>
+        <IconButton
+          css={{
+            background: "$danger10",
+            marginLeft: "$2",
+            _hover: {
+              background: "$danger11"
+            }
+          }}
+          aria-label="delete" icon={<IconDelete />} onClick={() => onDeleteClicked(id)}>Edit</IconButton>
+      </Flex>
+    )
+  }
 
   const table = createSolidTable<CompanyResponse>({
     get data() {
