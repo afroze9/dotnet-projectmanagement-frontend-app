@@ -2,7 +2,7 @@ import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spac
 import { ColumnDef, createSolidTable, getCoreRowModel, flexRender, createColumnHelper } from "@tanstack/solid-table";
 import { Component, For, createSignal } from "solid-js";
 import { ProjectResponse } from "../@types";
-import { withAuthenticationRequired } from "@afroze9/solid-auth0";
+import { Protected } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
 import { IconDelete, IconEdit } from "../components/Icons";
 
@@ -184,6 +184,8 @@ const Projects: Component = () => {
   );
 };
 
-export default withAuthenticationRequired(Projects, {
-  onRedirecting: () => <>Loading</>
-});
+export default () => (
+  <Protected onRedirecting={<>Loading</>}>
+    <Projects />
+  </Protected>
+)

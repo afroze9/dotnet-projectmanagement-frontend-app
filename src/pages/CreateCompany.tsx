@@ -4,7 +4,7 @@ import { Link, useNavigate } from "@solidjs/router";
 import { Component } from "solid-js";
 import { InferType, object, string } from "yup";
 import { validator } from '@felte/validator-yup';
-import { withAuthenticationRequired } from "@afroze9/solid-auth0";
+import { Protected } from "@afroze9/solid-auth0";
 
 const schema = object({
   name: string().min(5).required(),
@@ -73,6 +73,8 @@ const CreateCompany: Component = () => {
   );
 }
 
-export default withAuthenticationRequired(CreateCompany, {
-  onRedirecting: () => <>Loading</>
-});
+export default () => (
+  <Protected onRedirecting={<>Loading</>}>
+    <CreateCompany />
+  </Protected>
+)

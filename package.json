@@ -10,12 +10,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "vite": "^4.1.1",
-    "vite-plugin-solid": "^2.5.0"
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1",
+    "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
-    "@afroze9/solid-auth0": "^0.1.1",
+    "@afroze9/solid-auth0": "^0.2.0",
     "@auth0/auth0-spa-js": "^2.0.4",
     "@felte/solid": "^1.2.7",
     "@felte/validator-yup": "^1.0.11",
@@ -24,7 +24,7 @@
     "@stitches/core": "^1.2.8",
     "@tanstack/solid-table": "^8.8.5",
     "solid-icons": "^1.0.4",
-    "solid-js": "^1.7.1",
+    "solid-js": "^1.7.2",
     "solid-transition-group": "^0.2.2",
     "tslib": "^2.5.0",
     "yup": "^1.0.2"

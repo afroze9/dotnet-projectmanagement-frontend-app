@@ -2,9 +2,9 @@ import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td,
 import { Component, For, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
 import { CompanyResponse } from "../@types";
-import { withAuthenticationRequired } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
 import { IconEdit, IconDelete } from "../components/Icons";
+import { Protected } from "@afroze9/solid-auth0";
 
 const defaultData: CompanyResponse[] = [
   {
@@ -193,6 +193,8 @@ const Companies: Component = () => {
   );
 };
 
-export default withAuthenticationRequired(Companies, {
-  onRedirecting: () => <>Loading</>
-});
+export default () => (
+  <Protected onRedirecting={<>Loading</>}>
+    <Companies />
+  </Protected>
+)

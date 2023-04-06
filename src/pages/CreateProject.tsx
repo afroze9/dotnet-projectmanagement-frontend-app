@@ -1,4 +1,4 @@
-import { withAuthenticationRequired } from "@afroze9/solid-auth0";
+import { Protected } from "@afroze9/solid-auth0";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-yup";
 import { Container, Flex, Heading, VStack, FormControl, FormLabel, Input, FormErrorMessage, HStack, Button, Select, SelectContent, SelectIcon, SelectListbox, SelectOption, SelectOptionIndicator, SelectOptionText, SelectPlaceholder, SelectTrigger, SelectValue, SimpleOption, SimpleSelect } from "@hope-ui/solid";
@@ -165,6 +165,8 @@ const CreateProject: Component = () => {
   );
 }
 
-export default withAuthenticationRequired(CreateProject, {
-  onRedirecting: () => <>Loading</>
-});
+export default () => (
+  <Protected onRedirecting={<>Loading</>}>
+    <CreateProject />
+  </Protected>
+)
