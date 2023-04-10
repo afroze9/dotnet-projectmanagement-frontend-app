@@ -1,100 +1,34 @@
-import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
-import { Component, For, createSignal } from "solid-js";
-import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
-import { CompanyResponse } from "../@types";
+import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spacer, IconButton, Icon } from "@hope-ui/solid";
+import { ColumnDef, createSolidTable, getCoreRowModel, flexRender } from "@tanstack/solid-table";
+import { Component, For, createResource, createSignal } from "solid-js";
+import { ProjectResponse } from "../../@types";
+import { Protected, useAuth0 } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
-import { IconEdit, IconDelete } from "../components/Icons";
-import { Protected } from "@afroze9/solid-auth0";
+import { IconDelete, IconEdit } from "../../components/Icons";
+import { getProjects } from "../../api/project/ProjectApi";
+import { isErrorReponse } from "../../api/ErrorResponse";
 
-const defaultData: CompanyResponse[] = [
-  {
-    id: 1,
-    name: 'Acme Inc.',
-    projects: 5
-  },
-  {
-    id: 2,
-    name: 'Globex Corporation',
-    projects: 10
-  },
-  {
-    id: 3,
-    name: 'Initech',
-    projects: 3
-  },
-  {
-    id: 4,
-    name: 'Umbrella Corporation',
-    projects: 7
-  },
-  {
-    id: 5,
-    name: 'Stark Industries',
-    projects: 15
-  },
-  {
-    id: 6,
-    name: 'Wayne Enterprises',
-    projects: 12
-  },
-  {
-    id: 7,
-    name: 'Oscorp Industries',
-    projects: 8
-  },
-  {
-    id: 8,
-    name: 'S.H.I.E.L.D.',
-    projects: 4
-  },
-  {
-    id: 9,
-    name: 'Weyland-Yutani Corporation',
-    projects: 6
-  },
-  {
-    id: 10,
-    name: 'Cyberdyne Systems Corporation',
-    projects: 2
-  },
-  {
-    id: 11,
-    name: 'Staples Inc.',
-    projects: 1
-  },
-  {
-    id: 12,
-    name: 'Walmart Inc.',
-    projects: 20
-  },
-  {
-    id: 13,
-    name: 'Target Corporation',
-    projects: 14
-  },
-  {
-    id: 14,
-    name: 'Microsoft Corporation',
-    projects: 18
-  },
-  {
-    id: 15,
-    name: 'Amazon.com, Inc.',
-    projects: 22
+const Projects: Component = () => {
+  const auth0 = useAuth0();
+
+  const getProjectList = async (): Promise<ProjectResponse[]> => {
+    const list = await getProjects(await auth0.getToken());
+    if (!isErrorReponse(list)) {
+      return list as ProjectResponse[];
+    }
+    return [];
   }
-]
 
-const Companies: Component = () => {
-  const [data, setData] = createSignal(defaultData);
+  const [plist] = createResource(getProjectList);
 
-  const defaultColumns: ColumnDef<CompanyResponse>[] = [
+  const defaultColumns: ColumnDef<ProjectResponse>[] = [
     {
       accessorKey: 'name',
       cell: info => <Td>{info.getValue<string>()}</Td>,
       footer: info => info.column.id,
     },
     {
-      accessorKey: 'projects',
+      accessorKey: 'tasks',
       cell: info => <Td>{info.getValue<number>()}</Td>,
       footer: info => info.column.id,
     },
@@ -103,20 +37,17 @@ const Companies: Component = () => {
       cell: info => renderActions(info.row.original.id),
       footer: info => info.column.id
     }
-  ]
-
-  const onEditClicked = (id: number) => {
-    console.log(id);
-  }
+  ];
 
   const onDeleteClicked = (id: number) => {
     console.log(id);
   }
 
   const renderActions = (id: number) => {
+    const editUrl = `/projects/${id}/details`;
     return (
       <Flex>
-        <IconButton aria-label="edit" icon={<IconEdit />} onClick={() => onEditClicked(id)}>Edit</IconButton>
+        <IconButton aria-label="edit" icon={<IconEdit />} as={Link} href={editUrl}>Edit</IconButton>
         <IconButton
           css={{
             background: "$danger10",
@@ -130,9 +61,9 @@ const Companies: Component = () => {
     )
   }
 
-  const table = createSolidTable<CompanyResponse>({
+  const table = createSolidTable<ProjectResponse>({
     get data() {
-      return data()
+      return plist() ?? []
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
@@ -142,10 +73,10 @@ const Companies: Component = () => {
     <Container p="$2">
       <Flex>
         <Heading size="xl">
-          Companies
+          Projects
         </Heading>
         <Spacer />
-        <Button as={Link} href='/companies/create' >Add Company</Button>
+        <Button as={Link} href='/projects/create'>Add Project</Button>
       </Flex>
       <Container mt="$4">
         <Table striped="odd" highlightOnHover>
@@ -195,6 +126,6 @@ const Companies: Component = () => {
 
 export default () => (
   <Protected onRedirecting={<>Loading</>}>
-    <Companies />
+    <Projects />
   </Protected>
 )

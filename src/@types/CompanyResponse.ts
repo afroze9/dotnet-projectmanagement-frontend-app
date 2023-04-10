@@ -3,3 +3,8 @@ export type CompanyResponse = {
   name: string;
   projects: number;
 }
+
+export type CompanyRequest = {
+  name: string;
+  tags: string[];
+}

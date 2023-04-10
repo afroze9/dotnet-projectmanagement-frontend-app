@@ -14,3 +14,5 @@ export const ApplicationLinks: Hyperlink[] = [
     path: '/projects'
   },
 ]
+
+export const baseUrl = 'https://localhost:7068/api/v1';

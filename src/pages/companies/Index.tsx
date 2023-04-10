@@ -1,91 +1,35 @@
-import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spacer, IconButton, Icon } from "@hope-ui/solid";
-import { ColumnDef, createSolidTable, getCoreRowModel, flexRender, createColumnHelper } from "@tanstack/solid-table";
-import { Component, For, createSignal } from "solid-js";
-import { ProjectResponse } from "../@types";
-import { Protected } from "@afroze9/solid-auth0";
+import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
+import { Component, For, createResource, createSignal } from "solid-js";
+import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
+import { CompanyResponse } from "../../@types";
 import { Link } from "@solidjs/router";
-import { IconDelete, IconEdit } from "../components/Icons";
+import { IconEdit, IconDelete } from "../../components/Icons";
+import { Protected, useAuth0 } from "@afroze9/solid-auth0";
+import { getCompanies } from "../../api/company/CompanyApi";
+import { isErrorReponse } from "../../api/ErrorResponse";
 
 
-const defaultData: ProjectResponse[] = [
-  {
-    id: 11,
-    name: 'Project A',
-    company: 'Acme Inc.',
-    tasks: 15
-  },
-  {
-    id: 2,
-    name: 'Project B',
-    company: 'Globex Corporation',
-    tasks: 20
-  },
-  {
-    id: 3,
-    name: 'Project C',
-    company: 'Initech',
-    tasks: 10
-  },
-  {
-    id: 4,
-    name: 'Project D',
-    company: 'Umbrella Corporation',
-    tasks: 25
-  },
-  {
-    id: 5,
-    name: 'Project E',
-    company: 'Stark Industries',
-    tasks: 30
-  },
-  {
-    id: 6,
-    name: 'Project F',
-    company: 'Wayne Enterprises',
-    tasks: 12
-  },
-  {
-    id: 7,
-    name: 'Project G',
-    company: 'Oscorp Industries',
-    tasks: 18
-  },
-  {
-    id: 8,
-    name: 'Project H',
-    company: 'S.H.I.E.L.D.',
-    tasks: 8
-  },
-  {
-    id: 9,
-    name: 'Project I',
-    company: 'Weyland-Yutani Corporation',
-    tasks: 22
-  },
-  {
-    id: 10,
-    name: 'Project J',
-    company: 'Cyberdyne Systems Corporation',
-    tasks: 5
+const Companies: Component = () => {
+  const auth0 = useAuth0();
+
+  const getCompanyList = async (): Promise<CompanyResponse[]> => {
+    const list = await getCompanies(await auth0.getToken());
+    if (!isErrorReponse(list)) {
+      return list as CompanyResponse[];
+    }
+    return [];
   }
-]
 
-const Projects: Component = () => {
-  const [data, setData] = createSignal(defaultData);
+  const [clist] = createResource(getCompanyList);
 
-  const defaultColumns: ColumnDef<ProjectResponse>[] = [
+  const defaultColumns: ColumnDef<CompanyResponse>[] = [
     {
       accessorKey: 'name',
       cell: info => <Td>{info.getValue<string>()}</Td>,
       footer: info => info.column.id,
     },
     {
-      accessorKey: 'company',
-      cell: info => <Td>{info.getValue<string>()}</Td>,
-      footer: info => info.column.id,
-    },
-    {
-      accessorKey: 'tasks',
+      accessorKey: 'projects',
       cell: info => <Td>{info.getValue<number>()}</Td>,
       footer: info => info.column.id,
     },
@@ -94,7 +38,7 @@ const Projects: Component = () => {
       cell: info => renderActions(info.row.original.id),
       footer: info => info.column.id
     }
-  ];
+  ]
 
   const onEditClicked = (id: number) => {
     console.log(id);
@@ -121,9 +65,9 @@ const Projects: Component = () => {
     )
   }
 
-  const table = createSolidTable<ProjectResponse>({
+  const table = createSolidTable<CompanyResponse>({
     get data() {
-      return data()
+      return clist() ?? []
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
@@ -133,10 +77,10 @@ const Projects: Component = () => {
     <Container p="$2">
       <Flex>
         <Heading size="xl">
-          Projects
+          Companies
         </Heading>
         <Spacer />
-        <Button as={Link} href='/projects/create' >Add Project</Button>
+        <Button as={Link} href='/companies/create' >Add Company</Button>
       </Flex>
       <Container mt="$4">
         <Table striped="odd" highlightOnHover>
@@ -186,6 +130,6 @@ const Projects: Component = () => {
 
 export default () => (
   <Protected onRedirecting={<>Loading</>}>
-    <Projects />
+    <Companies />
   </Protected>
 )

@@ -1,6 +1,11 @@
 export type ProjectResponse = {
   id: number;
   name: string;
-  company: string;
+  companyId: number;
   tasks: number;
+}
+
+export type ProjectRequest = {
+  name: string;
+  companyId: number;
 }

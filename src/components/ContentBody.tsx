@@ -1,14 +1,15 @@
 import { Component, lazy } from 'solid-js';
-import { Flex, Center, Box } from '@hope-ui/solid';
+import { Flex, Box } from '@hope-ui/solid';
 import { Route, Routes } from '@solidjs/router';
 import Home from '../pages/Home';
-const Companies = lazy(() => import('../pages/Companies'));
-const Projects = lazy(() => import('../pages/Projects'));
-const CreateCompany = lazy(() => import('../pages/CreateCompany'));
-const CreateProject = lazy(() => import('../pages/CreateProject'));
-// import Companies from '../pages/Companies';
-// import Projects from '../pages/Projects';
-// import CreateCompany from '../pages/CreateCompany';
+
+const Companies = lazy(() => import('../pages/companies/Index'));
+const CompanyCreate = lazy(() => import('../pages/companies/Create'));
+
+const Projects = lazy(() => import('../pages/projects/Index'));
+const ProjectCreate = lazy(() => import('../pages/projects/Create'));
+const ProjectDetails = lazy(() => import('../pages/projects/Details'));
+
 
 export const ContentBody: Component = () => {
   return (
@@ -17,9 +18,10 @@ export const ContentBody: Component = () => {
         <Routes>
           <Route path="/" component={Home} />
           <Route path="/companies" component={Companies} />
-          <Route path="/companies/create" component={CreateCompany} />
+          <Route path="/companies/create" component={CompanyCreate} />
           <Route path="/projects" component={Projects} />
-          <Route path="/projects/create" component={CreateProject} />
+          <Route path="/projects/create" component={ProjectCreate} />
+          <Route path="/projects/:id/details" component={ProjectDetails} />
         </Routes>
       </Box >
     </Flex >

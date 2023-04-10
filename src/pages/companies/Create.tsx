@@ -4,7 +4,14 @@ import { Link, useNavigate } from "@solidjs/router";
 import { Component } from "solid-js";
 import { InferType, object, string } from "yup";
 import { validator } from '@felte/validator-yup';
-import { Protected } from "@afroze9/solid-auth0";
+import { Protected, useAuth0 } from "@afroze9/solid-auth0";
+import { createCompany } from "../../api/company/CompanyApi";
+import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
+
+type FormProps = {
+  name: string;
+  tags: string;
+};
 
 const schema = object({
   name: string().min(5).required(),
@@ -21,16 +28,23 @@ const CreateCompany: Component = () => {
   } = createForm<InferType<typeof schema>>({
     extend: validator({ schema }),
     onSubmit: values => {
-      saveCompany();
+      saveCompany(values);
     },
   });
 
   const navigate = useNavigate();
+  const auth0 = useAuth0();
 
-  const saveCompany = async () => {
-    setTimeout(() => {
+  const saveCompany = async (values: FormProps) => {
+    let response = await createCompany({
+      name: values.name,
+      tags: values.tags.split(',')
+    }, await auth0.getToken());
+    if (!isErrorReponse(response)) {
       navigate('/companies');
-    }, 1500);
+    } else {
+      alert((response as ErrorResponse).message);
+    }
   }
 
   return (
