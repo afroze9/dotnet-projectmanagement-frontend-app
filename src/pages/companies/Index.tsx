@@ -1,7 +1,7 @@
 import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
 import { Component, For, createResource, createSignal } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
-import { CompanyResponse } from "../../@types";
+import { CompanyResponse, CompanySummaryResponseModel } from "../../@types";
 import { Link } from "@solidjs/router";
 import { IconEdit, IconDelete } from "../../components/Icons";
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
@@ -12,24 +12,24 @@ import { isErrorReponse } from "../../api/ErrorResponse";
 const Companies: Component = () => {
   const auth0 = useAuth0();
 
-  const getCompanyList = async (): Promise<CompanyResponse[]> => {
+  const getCompanyList = async (): Promise<CompanySummaryResponseModel[]> => {
     const list = await getCompanies(await auth0.getToken());
     if (!isErrorReponse(list)) {
-      return list as CompanyResponse[];
+      return list as CompanySummaryResponseModel[];
     }
     return [];
   }
 
   const [clist] = createResource(getCompanyList);
 
-  const defaultColumns: ColumnDef<CompanyResponse>[] = [
+  const defaultColumns: ColumnDef<CompanySummaryResponseModel>[] = [
     {
       accessorKey: 'name',
       cell: info => <Td>{info.getValue<string>()}</Td>,
       footer: info => info.column.id,
     },
     {
-      accessorKey: 'projects',
+      accessorKey: 'projectCount',
       cell: info => <Td>{info.getValue<number>()}</Td>,
       footer: info => info.column.id,
     },
@@ -65,7 +65,7 @@ const Companies: Component = () => {
     )
   }
 
-  const table = createSolidTable<CompanyResponse>({
+  const table = createSolidTable<CompanySummaryResponseModel>({
     get data() {
       return clist() ?? []
     },

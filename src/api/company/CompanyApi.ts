@@ -1,14 +1,14 @@
-import { CompanyRequest, CompanyResponse } from "../../@types";
+import { CompanyRequest, CompanyResponse, CompanySummaryResponseModel } from "../../@types";
 import axios from 'axios';
 import { ErrorResponse } from "../ErrorResponse";
 import { getAxiosConfig, getUrl } from "../configs/axiosConfig";
 
-const getCompanies = async (token: string): Promise<CompanyResponse[] | ErrorResponse> => {
+const getCompanies = async (token: string): Promise<CompanySummaryResponseModel[] | ErrorResponse> => {
   const url = getUrl('/company');
   const config = getAxiosConfig(token);
 
   try {
-    const response = await axios.get<CompanyResponse[]>(url, config);
+    const response = await axios.get<CompanySummaryResponseModel[]>(url, config);
     return response.data;
   } catch (e) {
     console.error(e);

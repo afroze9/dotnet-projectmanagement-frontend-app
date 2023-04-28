@@ -12,9 +12,9 @@ const config: HopeThemeConfig = {
 const App: Component = () => {
   return (
     <Auth0
-      domain='afrozeprojectmanagement.us.auth0.com'
-      clientId='mIUsoezCpUuf9zcm7py5syzgtVvNQTvD'
-      audience='company'
+      domain='teamly.us.auth0.com'
+      clientId='InPTCm0pFBIovGrvm0I3qJGs5XnVgJV5'
+      audience='projectmanagement'
       logoutRedirectUri={`${window.location.origin}/`}
       loginRedirectUri={`${window.location.origin}/`}
       scope='openid profile email read:project write:project update:project delete:project read:company write:company update:company delete:company'

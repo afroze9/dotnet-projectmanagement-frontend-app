@@ -8,3 +8,10 @@ export type CompanyRequest = {
   name: string;
   tags: string[];
 }
+
+export type CompanySummaryResponseModel = {
+  id: number;
+  name: string;
+  projectCount: number;
+  tags: string[];
+}
