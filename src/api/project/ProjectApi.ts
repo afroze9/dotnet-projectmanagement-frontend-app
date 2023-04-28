@@ -42,4 +42,15 @@ const createProject = async (company: ProjectRequest, token: string): Promise<Pr
   }
 }
 
-export { getProjects, getProjectById, createProject }
+const deleteProject = async (projectId: number, token: string): Promise<void> => {
+  const url = getUrl(`/project/${projectId}`);
+  const config = getAxiosConfig(token);
+
+  try {
+    await axios.delete<ProjectResponse>(url, config);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export { getProjects, getProjectById, createProject, deleteProject }

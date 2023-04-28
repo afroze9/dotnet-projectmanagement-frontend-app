@@ -1,5 +1,5 @@
 import type { Component } from 'solid-js';
-import { HopeThemeConfig, HopeProvider } from '@hope-ui/solid'
+import { HopeThemeConfig, HopeProvider, NotificationsProvider } from '@hope-ui/solid'
 import { Layout } from './components/Layout';
 import { Router } from '@solidjs/router';
 import { Auth0 } from '@afroze9/solid-auth0';
@@ -21,7 +21,9 @@ const App: Component = () => {
     >
       <Router>
         <HopeProvider config={config}>
-          <Layout />
+          <NotificationsProvider>
+            <Layout />
+          </NotificationsProvider>
         </HopeProvider>
       </Router>
     </Auth0>

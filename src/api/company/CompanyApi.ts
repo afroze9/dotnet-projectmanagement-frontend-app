@@ -48,7 +48,6 @@ const updateCompany = async (id: number, company: UpdateCompanyRequest, token: s
 
   try {
     const response = await axios.put<CompanyResponse>(url, company, config);
-    console.log('updated company', response)
     return response.data;
   } catch (e) {
     console.error(e);
@@ -56,4 +55,27 @@ const updateCompany = async (id: number, company: UpdateCompanyRequest, token: s
   }
 }
 
-export { getCompanies, getCompanyById, createCompany, updateCompany }
+const deleteCompany = async (companyId: number, token: string): Promise<void> => {
+  const url = getUrl(`/company/${companyId}`);
+  const config = getAxiosConfig(token);
+
+  try {
+    await axios.delete<CompanyResponse>(url, config);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+
+const deleteCompanyTag = async (companyId: number, tagName: string, token: string): Promise<void> => {
+  const url = getUrl(`/company/${companyId}/tag?tagName=${tagName}`);
+  const config = getAxiosConfig(token);
+
+  try {
+    await axios.delete<CompanyResponse>(url, config);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export { getCompanies, getCompanyById, createCompany, updateCompany, deleteCompany, deleteCompanyTag }

@@ -5,7 +5,7 @@ import { Container, Flex, Heading, VStack, FormControl, FormLabel, Input, FormEr
 import { useNavigate, Link } from "@solidjs/router";
 import { Component, For, createResource } from "solid-js";
 import { object, string, InferType, number } from "yup";
-import { CompanyResponse } from "../../@types";
+import { CompanyResponse, CompanySummaryResponseModel } from "../../@types";
 import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
 import { getCompanies } from "../../api/company/CompanyApi";
 import { createProject } from "../../api/project/ProjectApi";
@@ -37,10 +37,10 @@ const CreateProject: Component = () => {
   const auth0 = useAuth0();
   const navigate = useNavigate();
 
-  const getCompanyList = async (): Promise<CompanyResponse[]> => {
+  const getCompanyList = async (): Promise<CompanySummaryResponseModel[]> => {
     const c = await getCompanies(await auth0.getToken());
     if (!isErrorReponse(c)) {
-      return c as CompanyResponse[];
+      return c as CompanySummaryResponseModel[];
     }
     return [];
   }
@@ -83,7 +83,7 @@ const CreateProject: Component = () => {
           <FormControl required invalid={!!errors("company")}>
             <FormLabel for="company">Company</FormLabel>
             <SimpleSelect
-              placeholder="Choose a job title"
+              placeholder="Choose a company"
               onChange={value => setFields("company", value)}
             >
               <For each={companies()}>

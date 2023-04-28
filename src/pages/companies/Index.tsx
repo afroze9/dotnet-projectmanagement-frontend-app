@@ -1,16 +1,19 @@
-import { Button, Container, Flex, Heading, IconButton, Spacer, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "@hope-ui/solid";
-import { Component, For, createResource, createSignal } from "solid-js";
+import { Button, Container, createDisclosure, Flex, Heading, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Table, Tbody, Td, Th, Thead, Tr } from "@hope-ui/solid";
+import { Component, For, createSignal, createEffect } from "solid-js";
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from "@tanstack/solid-table";
-import { CompanyResponse, CompanySummaryResponseModel } from "../../@types";
+import { CompanySummaryResponseModel } from "../../@types";
 import { Link } from "@solidjs/router";
 import { IconEdit, IconDelete } from "../../components/Icons";
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
-import { getCompanies } from "../../api/company/CompanyApi";
+import { deleteCompany, getCompanies } from "../../api/company/CompanyApi";
 import { isErrorReponse } from "../../api/ErrorResponse";
 
 
 const Companies: Component = () => {
   const auth0 = useAuth0();
+  const { isOpen, onOpen, onClose } = createDisclosure();
+  const [companies, setCompanies] = createSignal<CompanySummaryResponseModel[]>([]);
+  const [companyToDelete, setCompanyToDelete] = createSignal(0);
 
   const getCompanyList = async (): Promise<CompanySummaryResponseModel[]> => {
     const list = await getCompanies(await auth0.getToken());
@@ -19,8 +22,6 @@ const Companies: Component = () => {
     }
     return [];
   }
-
-  const [clist] = createResource(getCompanyList);
 
   const defaultColumns: ColumnDef<CompanySummaryResponseModel>[] = [
     {
@@ -32,6 +33,7 @@ const Companies: Component = () => {
       accessorKey: 'projectCount',
       cell: info => <Td>{info.getValue<number>()}</Td>,
       footer: info => info.column.id,
+      header: 'Projects'
     },
     {
       id: 'actions',
@@ -40,8 +42,34 @@ const Companies: Component = () => {
     }
   ]
 
+  createEffect(async () => {
+    try {
+      const data = await getCompanyList();
+      setCompanies(data);
+    } catch (error) {
+      console.error(error);
+    }
+  })
+
   const onDeleteClicked = (id: number) => {
-    console.log(id);
+    setCompanyToDelete(id);
+    onOpen();
+  }
+
+  async function onCompanyDelete() {
+    if (companyToDelete() !== 0) {
+      await deleteCompany(companyToDelete(), await auth0.getToken());
+      setCompanies((prev) => {
+        return prev.filter(c => c.id !== companyToDelete());
+      });
+    }
+
+    onModalClose();
+  }
+
+  function onModalClose() {
+    setCompanyToDelete(0);
+    onClose();
   }
 
   const renderActions = (id: number) => {
@@ -64,7 +92,7 @@ const Companies: Component = () => {
 
   const table = createSolidTable<CompanySummaryResponseModel>({
     get data() {
-      return clist() ?? []
+      return companies()
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
@@ -121,6 +149,20 @@ const Companies: Component = () => {
           </Tbody>
         </Table>
       </Container>
+      <Modal opened={isOpen()} onClose={onModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>Delete Company</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to delete this company?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onModalClose} mr="$3" variant="outline">Close</Button>
+            <Button onClick={onCompanyDelete} colorScheme="danger">Delete</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };

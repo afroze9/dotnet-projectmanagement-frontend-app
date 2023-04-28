@@ -1,22 +1,21 @@
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
-import { Button, Container, Flex, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Input, VStack } from "@hope-ui/solid";
+import { Button, Container, Flex, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Input, VStack, Tag, TagLabel, TagCloseButton, notificationService, createDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Anchor } from "@hope-ui/solid";
 import { Link, useNavigate, useParams } from "@solidjs/router";
 import { Component, createEffect, createSignal } from "solid-js";
 import { CompanyResponse } from "../../@types";
-import { getCompanyById, updateCompany } from "../../api/company/CompanyApi";
+import { deleteCompanyTag, getCompanyById, updateCompany } from "../../api/company/CompanyApi";
 import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
 import { InferType, object, string } from "yup";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-yup";
 
+
 type FormProps = {
   name: string;
-  // tags: string;
 };
 
 const schema = object({
   name: string().min(5).required(),
-  // tags: string().min(5).required(),
 });
 
 
@@ -51,8 +50,7 @@ const CompanyDetails: Component = () => {
   async function saveCompany(values: FormProps) {
     let updatedCompany = {
       id: +params.id,
-      name: values.name,
-      // tags: values.tags.split(',')
+      name: values.name
     };
     console.log(updatedCompany);
 
@@ -79,12 +77,40 @@ const CompanyDetails: Component = () => {
     }
   }
 
+  async function deleteTag(companyId: number, tagName: string) {
+    if (company()?.tags?.length <= 1) {
+      notificationService.show({
+        title: "Cannot delete tag",
+        description: "The company must have at least one tag",
+        status: "danger"
+      })
+      return;
+    }
+
+    await deleteCompanyTag(companyId, tagName, await auth0.getToken());
+
+    setCompany((prev) => {
+      return {
+        ...prev,
+        tags: prev.tags.filter(x => x.name !== tagName)
+      }
+    });
+  }
+
   return (
     <Container p="$2">
       <Flex>
-        <Heading size="xl">
-          {company()?.name}
-        </Heading>
+        <HStack spacing="$4">
+          <Heading size="xl">
+            {company()?.name}
+          </Heading>
+          {company()?.tags?.map(tag => (
+            <Tag size="md">
+              <TagLabel>{tag.name}</TagLabel>
+              <TagCloseButton onClick={() => deleteTag(+params.id, tag.name)} />
+            </Tag>
+          ))}
+        </HStack>
       </Flex>
       <Container mt="$4">
         <VStack
@@ -100,11 +126,6 @@ const CompanyDetails: Component = () => {
             <Input type="text" name="name" placeholder="Company Name" value={company()?.name} />
             <FormErrorMessage>{form.errors("name")?.[0]}</FormErrorMessage>
           </FormControl>
-          {/* <FormControl required invalid={!!form.errors("tags")}>
-            <FormLabel for="tags">Tags</FormLabel>
-            <Input type="text" name="tags" placeholder="Tags" value={company()?.tags?.map(x => x.name).join(', ')} />
-            <FormErrorMessage>{form.errors("tags")?.[0]}</FormErrorMessage>
-          </FormControl> */}
           <HStack justifyContent="flex-end" spacing="$5">
             <Button type="button" colorScheme="danger" as={Link} href='/companies'>
               Cancel
@@ -116,12 +137,14 @@ const CompanyDetails: Component = () => {
         </VStack>
       </Container>
       <Container>
+
         <ul>
           {company()?.projects?.map(x => <li>
-            <a href={`/projects/${x.id}/details`} >{x.name}</a> - {x.taskCount} tasks
+            <Anchor as={Link} href={`/projects/${x.id}/details`} >{x.name}</Anchor> - {x.taskCount} tasks
           </li>)}
         </ul>
       </Container>
+
     </Container>
   )
 }
@@ -131,7 +154,3 @@ export default () => (
     <CompanyDetails />
   </Protected>
 )
-function bind(name: any): import("solid-js").JSX.IntrinsicAttributes & import("@hope-ui/solid").InputProps {
-  throw new Error("Function not implemented.");
-}
-

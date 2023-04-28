@@ -1,15 +1,18 @@
-import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spacer, IconButton, Icon } from "@hope-ui/solid";
+import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spacer, IconButton, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, createDisclosure } from "@hope-ui/solid";
 import { ColumnDef, createSolidTable, getCoreRowModel, flexRender } from "@tanstack/solid-table";
-import { Component, For, createResource, createSignal } from "solid-js";
+import { Component, For, createResource, createSignal, createEffect } from "solid-js";
 import { ProjectResponse } from "../../@types";
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
 import { IconDelete, IconEdit } from "../../components/Icons";
-import { getProjects } from "../../api/project/ProjectApi";
+import { deleteProject, getProjects } from "../../api/project/ProjectApi";
 import { isErrorReponse } from "../../api/ErrorResponse";
 
 const Projects: Component = () => {
   const auth0 = useAuth0();
+  const { isOpen, onOpen, onClose } = createDisclosure();
+  const [projects, setProjects] = createSignal<ProjectResponse[]>([]);
+  const [projectToDelete, setProjectToDelete] = createSignal(0);
 
   const getProjectList = async (): Promise<ProjectResponse[]> => {
     const list = await getProjects(await auth0.getToken());
@@ -18,8 +21,6 @@ const Projects: Component = () => {
     }
     return [];
   }
-
-  const [plist] = createResource(getProjectList);
 
   const defaultColumns: ColumnDef<ProjectResponse>[] = [
     {
@@ -39,8 +40,35 @@ const Projects: Component = () => {
     }
   ];
 
+  createEffect(async () => {
+    try {
+      let data = await getProjectList();
+      setProjects(data);
+    } catch (error) {
+      console.error(error);
+    }
+  })
+
+
   const onDeleteClicked = (id: number) => {
-    console.log(id);
+    setProjectToDelete(id);
+    onOpen();
+  }
+
+  async function onProjectDelete() {
+    if (projectToDelete() !== 0) {
+      await deleteProject(projectToDelete(), await auth0.getToken());
+      setProjects((prev) => {
+        return prev.filter(c => c.id !== projectToDelete());
+      });
+    }
+
+    onModalClose();
+  }
+
+  function onModalClose() {
+    setProjectToDelete(0);
+    onClose();
   }
 
   const renderActions = (id: number) => {
@@ -63,7 +91,7 @@ const Projects: Component = () => {
 
   const table = createSolidTable<ProjectResponse>({
     get data() {
-      return plist() ?? []
+      return projects()
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
@@ -120,6 +148,20 @@ const Projects: Component = () => {
           </Tbody>
         </Table>
       </Container>
+      <Modal opened={isOpen()} onClose={onModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>Delete Project</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to delete this project?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onModalClose} mr="$3" variant="outline">Close</Button>
+            <Button onClick={onProjectDelete} colorScheme="danger">Delete</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
