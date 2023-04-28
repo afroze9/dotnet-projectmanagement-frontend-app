@@ -9,3 +9,10 @@ export type ProjectRequest = {
   name: string;
   companyId: number;
 }
+
+export type ProjectSummaryResponseModel = {
+  id: number;
+  companyId: number;
+  name: string;
+  taskCount: number;
+}

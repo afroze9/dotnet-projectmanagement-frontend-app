@@ -1,4 +1,4 @@
-import { CompanyRequest, CompanyResponse, CompanySummaryResponseModel } from "../../@types";
+import { CompanyRequest, CompanyResponse, CompanySummaryResponseModel, UpdateCompanyRequest } from "../../@types";
 import axios from 'axios';
 import { ErrorResponse } from "../ErrorResponse";
 import { getAxiosConfig, getUrl } from "../configs/axiosConfig";
@@ -17,7 +17,7 @@ const getCompanies = async (token: string): Promise<CompanySummaryResponseModel[
 }
 
 const getCompanyById = async (id: number, token: string): Promise<CompanyResponse | ErrorResponse> => {
-  const url = getUrl('/company/${id}');
+  const url = getUrl(`/company/${id}`);
   const config = getAxiosConfig(token);
 
   try {
@@ -42,4 +42,18 @@ const createCompany = async (company: CompanyRequest, token: string): Promise<Co
   }
 }
 
-export { getCompanies, getCompanyById, createCompany }
+const updateCompany = async (id: number, company: UpdateCompanyRequest, token: string): Promise<CompanyResponse | ErrorResponse> => {
+  const url = getUrl(`/company/${id}`);
+  const config = getAxiosConfig(token);
+
+  try {
+    const response = await axios.put<CompanyResponse>(url, company, config);
+    console.log('updated company', response)
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    return { message: (e as any).toString() };
+  }
+}
+
+export { getCompanies, getCompanyById, createCompany, updateCompany }

@@ -1,12 +1,22 @@
+import { ProjectSummaryResponseModel } from "./ProjectResponse";
+import { TagResponseModel } from "./Tag";
+
 export type CompanyResponse = {
   id: number;
   name: string;
-  projects: number;
+  projects: ProjectSummaryResponseModel[];
+  tags: TagResponseModel[];
 }
 
 export type CompanyRequest = {
   name: string;
   tags: string[];
+}
+
+export type UpdateCompanyRequest = {
+  id: number;
+  name: string;
+  // tags: string[];
 }
 
 export type CompanySummaryResponseModel = {

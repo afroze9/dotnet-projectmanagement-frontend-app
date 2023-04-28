@@ -40,18 +40,15 @@ const Companies: Component = () => {
     }
   ]
 
-  const onEditClicked = (id: number) => {
-    console.log(id);
-  }
-
   const onDeleteClicked = (id: number) => {
     console.log(id);
   }
 
   const renderActions = (id: number) => {
+    const editUrl = `/companies/${id}/details`;
     return (
       <Flex>
-        <IconButton aria-label="edit" icon={<IconEdit />} onClick={() => onEditClicked(id)}>Edit</IconButton>
+        <IconButton aria-label="edit" icon={<IconEdit />} as={Link} href={editUrl}>Edit</IconButton>
         <IconButton
           css={{
             background: "$danger10",

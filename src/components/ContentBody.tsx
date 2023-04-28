@@ -5,6 +5,7 @@ import Home from '../pages/Home';
 
 const Companies = lazy(() => import('../pages/companies/Index'));
 const CompanyCreate = lazy(() => import('../pages/companies/Create'));
+const CompanyDetails = lazy(() => import('../pages/companies/Details'));
 
 const Projects = lazy(() => import('../pages/projects/Index'));
 const ProjectCreate = lazy(() => import('../pages/projects/Create'));
@@ -19,6 +20,7 @@ export const ContentBody: Component = () => {
           <Route path="/" component={Home} />
           <Route path="/companies" component={Companies} />
           <Route path="/companies/create" component={CompanyCreate} />
+          <Route path="/companies/:id/details" component={CompanyDetails} />
           <Route path="/projects" component={Projects} />
           <Route path="/projects/create" component={ProjectCreate} />
           <Route path="/projects/:id/details" component={ProjectDetails} />
