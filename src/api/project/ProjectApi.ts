@@ -1,4 +1,4 @@
-import { ProjectRequest, ProjectResponse } from "../../@types";
+import { ProjectRequest, ProjectResponse, UpdateProjectRequest } from "../../@types";
 import axios from 'axios';
 import { getUrl, getAxiosConfig } from "../configs/axiosConfig";
 import { ErrorResponse } from "../ErrorResponse";
@@ -42,6 +42,19 @@ const createProject = async (company: ProjectRequest, token: string): Promise<Pr
   }
 }
 
+const updateProject = async (id: number, company: UpdateProjectRequest, token: string): Promise<ProjectResponse | ErrorResponse> => {
+  const url = getUrl(`/project/${id}`);
+  const config = getAxiosConfig(token);
+
+  try {
+    const response = await axios.put<ProjectResponse>(url, company, config);
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    return { message: (e as any).toString() };
+  }
+}
+
 const deleteProject = async (projectId: number, token: string): Promise<void> => {
   const url = getUrl(`/project/${projectId}`);
   const config = getAxiosConfig(token);
@@ -53,4 +66,4 @@ const deleteProject = async (projectId: number, token: string): Promise<void> =>
   }
 }
 
-export { getProjects, getProjectById, createProject, deleteProject }
+export default { getProjects, getProjectById, createProject, deleteProject, updateProject }

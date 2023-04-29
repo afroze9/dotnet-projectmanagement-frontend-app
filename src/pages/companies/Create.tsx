@@ -5,7 +5,7 @@ import { Component } from "solid-js";
 import { InferType, object, string } from "yup";
 import { validator } from '@felte/validator-yup';
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
-import { createCompany } from "../../api/company/CompanyApi";
+import CompanyApi from "../../api/company/CompanyApi";
 import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
 
 type FormProps = {
@@ -36,7 +36,7 @@ const CreateCompany: Component = () => {
   const auth0 = useAuth0();
 
   const saveCompany = async (values: FormProps) => {
-    let response = await createCompany({
+    let response = await CompanyApi.createCompany({
       name: values.name,
       tags: values.tags.split(',')
     }, await auth0.getToken());
@@ -60,7 +60,7 @@ const CreateCompany: Component = () => {
           ref={form}
           spacing="$5"
           alignItems="stretch"
-          maxW="$96"
+          maxW="$128"
           mx="auto"
         >
           <FormControl required invalid={!!errors("name")}>

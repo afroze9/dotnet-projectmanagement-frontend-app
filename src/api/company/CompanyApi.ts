@@ -78,4 +78,4 @@ const deleteCompanyTag = async (companyId: number, tagName: string, token: strin
   }
 }
 
-export { getCompanies, getCompanyById, createCompany, updateCompany, deleteCompany, deleteCompanyTag }
+export default { getCompanies, getCompanyById, createCompany, updateCompany, deleteCompany, deleteCompanyTag }

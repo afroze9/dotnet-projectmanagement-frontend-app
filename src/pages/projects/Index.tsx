@@ -1,11 +1,11 @@
 import { Td, Container, Heading, Table, Thead, Tr, Th, Tbody, Button, Flex, Spacer, IconButton, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, createDisclosure } from "@hope-ui/solid";
 import { ColumnDef, createSolidTable, getCoreRowModel, flexRender } from "@tanstack/solid-table";
 import { Component, For, createResource, createSignal, createEffect } from "solid-js";
-import { ProjectResponse } from "../../@types";
+import { ProjectResponse, TodoItem } from "../../@types";
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
 import { Link } from "@solidjs/router";
 import { IconDelete, IconEdit } from "../../components/Icons";
-import { deleteProject, getProjects } from "../../api/project/ProjectApi";
+import ProjectApi from "../../api/project/ProjectApi";
 import { isErrorReponse } from "../../api/ErrorResponse";
 
 const Projects: Component = () => {
@@ -15,7 +15,7 @@ const Projects: Component = () => {
   const [projectToDelete, setProjectToDelete] = createSignal(0);
 
   const getProjectList = async (): Promise<ProjectResponse[]> => {
-    const list = await getProjects(await auth0.getToken());
+    const list = await ProjectApi.getProjects(await auth0.getToken());
     if (!isErrorReponse(list)) {
       return list as ProjectResponse[];
     }
@@ -29,9 +29,10 @@ const Projects: Component = () => {
       footer: info => info.column.id,
     },
     {
-      accessorKey: 'tasks',
-      cell: info => <Td>{info.getValue<number>()}</Td>,
+      accessorKey: 'todoItems',
+      cell: info => <Td>{info.getValue<TodoItem[]>()?.length ?? 0}</Td>,
       footer: info => info.column.id,
+      header: 'Tasks'
     },
     {
       id: 'actions',
@@ -57,7 +58,7 @@ const Projects: Component = () => {
 
   async function onProjectDelete() {
     if (projectToDelete() !== 0) {
-      await deleteProject(projectToDelete(), await auth0.getToken());
+      await ProjectApi.deleteProject(projectToDelete(), await auth0.getToken());
       setProjects((prev) => {
         return prev.filter(c => c.id !== projectToDelete());
       });

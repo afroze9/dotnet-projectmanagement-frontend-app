@@ -5,7 +5,7 @@ import { CompanySummaryResponseModel } from "../../@types";
 import { Link } from "@solidjs/router";
 import { IconEdit, IconDelete } from "../../components/Icons";
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
-import { deleteCompany, getCompanies } from "../../api/company/CompanyApi";
+import CompanyApi from "../../api/company/CompanyApi";
 import { isErrorReponse } from "../../api/ErrorResponse";
 
 
@@ -16,7 +16,7 @@ const Companies: Component = () => {
   const [companyToDelete, setCompanyToDelete] = createSignal(0);
 
   const getCompanyList = async (): Promise<CompanySummaryResponseModel[]> => {
-    const list = await getCompanies(await auth0.getToken());
+    const list = await CompanyApi.getCompanies(await auth0.getToken());
     if (!isErrorReponse(list)) {
       return list as CompanySummaryResponseModel[];
     }
@@ -58,7 +58,7 @@ const Companies: Component = () => {
 
   async function onCompanyDelete() {
     if (companyToDelete() !== 0) {
-      await deleteCompany(companyToDelete(), await auth0.getToken());
+      await CompanyApi.deleteCompany(companyToDelete(), await auth0.getToken());
       setCompanies((prev) => {
         return prev.filter(c => c.id !== companyToDelete());
       });

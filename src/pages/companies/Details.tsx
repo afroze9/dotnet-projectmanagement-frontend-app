@@ -1,13 +1,14 @@
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
 import { Button, Container, Flex, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Input, VStack, Tag, TagLabel, TagCloseButton, notificationService, createDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Anchor } from "@hope-ui/solid";
 import { Link, useNavigate, useParams } from "@solidjs/router";
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component, createEffect, createSignal, For } from "solid-js";
 import { CompanyResponse } from "../../@types";
-import { deleteCompanyTag, getCompanyById, updateCompany } from "../../api/company/CompanyApi";
+import CompanyApi from "../../api/company/CompanyApi";
 import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
 import { InferType, object, string } from "yup";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-yup";
+import { ProjectCard } from "../../components/ProjectCard";
 
 
 type FormProps = {
@@ -42,6 +43,9 @@ const CompanyDetails: Component = () => {
     try {
       const data = await getCompany(+params.id);
       setCompany(data);
+      form.setFields({
+        name: data.name,
+      })
     } catch (error) {
       console.error(error);
     }
@@ -52,9 +56,8 @@ const CompanyDetails: Component = () => {
       id: +params.id,
       name: values.name
     };
-    console.log(updatedCompany);
 
-    let response = await updateCompany(+params.id, updatedCompany, await auth0.getToken());
+    let response = await CompanyApi.updateCompany(+params.id, updatedCompany, await auth0.getToken());
     if (!isErrorReponse(response)) {
       navigate('/companies');
     } else {
@@ -63,7 +66,7 @@ const CompanyDetails: Component = () => {
   }
 
   async function getCompany(id: number): Promise<CompanyResponse> {
-    const response = await getCompanyById(id, await auth0.getToken());
+    const response = await CompanyApi.getCompanyById(id, await auth0.getToken());
     if (!isErrorReponse(response)) {
       let company = response as CompanyResponse;
       return company;
@@ -87,7 +90,7 @@ const CompanyDetails: Component = () => {
       return;
     }
 
-    await deleteCompanyTag(companyId, tagName, await auth0.getToken());
+    await CompanyApi.deleteCompanyTag(companyId, tagName, await auth0.getToken());
 
     setCompany((prev) => {
       return {
@@ -118,7 +121,7 @@ const CompanyDetails: Component = () => {
           ref={form.form}
           spacing="$5"
           alignItems="stretch"
-          maxW="$96"
+          maxW="$128"
           mx="auto"
         >
           <FormControl required invalid={!!form.errors("name")}>
@@ -136,13 +139,21 @@ const CompanyDetails: Component = () => {
           </HStack>
         </VStack>
       </Container>
-      <Container>
 
-        <ul>
-          {company()?.projects?.map(x => <li>
-            <Anchor as={Link} href={`/projects/${x.id}/details`} >{x.name}</Anchor> - {x.taskCount} tasks
-          </li>)}
-        </ul>
+      <Flex mt="$4">
+        <Heading size="xl">
+          Projects
+        </Heading>
+      </Flex>
+
+      <Container mt="$4">
+        <VStack spacing="$4">
+          {
+            company() && <For each={company().projects}>
+              {item => <ProjectCard id={item.id} name={item.name} tasks={item.taskCount} />}
+            </For>
+          }
+        </VStack>
       </Container>
 
     </Container>

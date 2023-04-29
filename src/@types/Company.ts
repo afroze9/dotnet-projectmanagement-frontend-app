@@ -1,4 +1,4 @@
-import { ProjectSummaryResponseModel } from "./ProjectResponse";
+import { ProjectSummaryResponseModel } from "./Project";
 import { TagResponseModel } from "./Tag";
 
 export type CompanyResponse = {

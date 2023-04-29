@@ -1,14 +1,14 @@
 import { Protected, useAuth0 } from "@afroze9/solid-auth0";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-yup";
-import { Container, Flex, Heading, VStack, FormControl, FormLabel, Input, FormErrorMessage, HStack, Button, Select, SelectContent, SelectIcon, SelectListbox, SelectOption, SelectOptionIndicator, SelectOptionText, SelectPlaceholder, SelectTrigger, SelectValue, SimpleOption, SimpleSelect } from "@hope-ui/solid";
+import { Container, Flex, Heading, VStack, FormControl, FormLabel, Input, FormErrorMessage, HStack, Button, SimpleOption, SimpleSelect } from "@hope-ui/solid";
 import { useNavigate, Link } from "@solidjs/router";
 import { Component, For, createResource } from "solid-js";
 import { object, string, InferType, number } from "yup";
-import { CompanyResponse, CompanySummaryResponseModel } from "../../@types";
+import { CompanySummaryResponseModel } from "../../@types";
 import { ErrorResponse, isErrorReponse } from "../../api/ErrorResponse";
-import { getCompanies } from "../../api/company/CompanyApi";
-import { createProject } from "../../api/project/ProjectApi";
+import CompanyApi from "../../api/company/CompanyApi";
+import ProjectApi from "../../api/project/ProjectApi";
 
 type FormProps = {
   name: string;
@@ -38,7 +38,7 @@ const CreateProject: Component = () => {
   const navigate = useNavigate();
 
   const getCompanyList = async (): Promise<CompanySummaryResponseModel[]> => {
-    const c = await getCompanies(await auth0.getToken());
+    const c = await CompanyApi.getCompanies(await auth0.getToken());
     if (!isErrorReponse(c)) {
       return c as CompanySummaryResponseModel[];
     }
@@ -48,7 +48,7 @@ const CreateProject: Component = () => {
   const [companies] = createResource(getCompanyList);
 
   const saveProject = async (values: FormProps) => {
-    let response = await createProject({
+    let response = await ProjectApi.createProject({
       name: values.name,
       companyId: values.company
     }, await auth0.getToken());
@@ -72,7 +72,7 @@ const CreateProject: Component = () => {
           ref={form}
           spacing="$5"
           alignItems="stretch"
-          maxW="$96"
+          maxW="$128"
           mx="auto"
         >
           <FormControl required invalid={!!errors("name")}>
