@@ -22,12 +22,16 @@ export default defineConfig({
     transformMode: {
       web: [/.[jt]sx?/],
     },
+    reporters: ['vitest-sonar-reporter'],
+    outputFile: {
+      'vitest-sonar-reporter': 'coverage/sonar/sonar-report.xml'
+    },
     setupFiles: './setupVitest.js',
     threads: false,
     isolate: false,
     coverage: {
-      reporter: ['html'],
-      reportsDirectory: './tests/coverage'
+      reporter: ['lcov'],
+      reportsDirectory: './coverage/lcov'
     }
   },
 });
